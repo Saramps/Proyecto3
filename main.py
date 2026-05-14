@@ -199,13 +199,16 @@ def responder_resena(resena_id: str, admin_id: str = Query(...), texto_respuesta
     if not resena:
         raise HTTPException(status_code=404, detail="Reseña no encontrada")
     respuesta = {
-        "admin_id": admin_id,
         "texto": texto_respuesta,
-        "fecha": datetime.now(timezone.utc).isoformat()
+        "fecha_respuesta": datetime.now(timezone.utc),
+        "cedula_admin": admin_id
     }
     resenas.update_one(
         {"_id": ObjectId(resena_id)},
-        {"$set": {"respuesta_admin": respuesta, "fecha_actualizacion": datetime.now(timezone.utc).isoformat()}}
+        {"$set": {
+            "respuesta_admin": respuesta,
+            "fecha_actualizacion": datetime.now(timezone.utc)
+        }}
     )
     return {"mensaje": "Respuesta registrada exitosamente"}
 
