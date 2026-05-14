@@ -195,7 +195,7 @@ def historial_resenas(
 # RF7 – Responder reseña (administrador)
 
 
-@app.post("/resenas/{resena_id}/respuesta")
+@app.post("/responder/{resena_id}")
 def responder_resena(resena_id: str, datos: dict):
     admin_id = datos.get("admin_id")
     texto_respuesta = datos.get("texto_respuesta")
@@ -223,7 +223,7 @@ def responder_resena(resena_id: str, datos: dict):
 # RF8 – Eliminar reseña (administrador)
 
 
-@app.delete("/admin/resenas/{resena_id}")
+@app.delete("/eliminar/{resena_id}")
 def eliminar_resena_admin(resena_id: str, admin_id: str = Query(...)):
     resena = resenas.find_one({"_id": ObjectId(resena_id)})
     if not resena:
@@ -242,7 +242,7 @@ def eliminar_resena_admin(resena_id: str, admin_id: str = Query(...)):
 
 # RF9 – Destacar reseña (administrador)
 
-@app.post("/hoteles/{hotel_id}/resenas/{resena_id}/destacar")
+@app.post("/destacar/{hotel_id}/{resena_id}")
 def destacar_resena(hotel_id: str, resena_id: str, datos: dict):
     admin_id = datos.get("admin_id")
     if not admin_id:
