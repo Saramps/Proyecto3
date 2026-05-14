@@ -212,8 +212,7 @@ def responder_resena(resena_id: str, admin_id: str = Query(...), texto_respuesta
     )
     return {"mensaje": "Respuesta registrada exitosamente"}
 
-# RF8 – Eliminar reseña (administrador)
-@app.delete("/eliminar/{resena_id}")
+@app.post("/eliminar/{resena_id}")
 def eliminar_resena_admin(resena_id: str, admin_id: str = Query(...)):
     resena = resenas.find_one({"_id": ObjectId(resena_id)})
     if not resena:
