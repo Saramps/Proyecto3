@@ -223,7 +223,7 @@ def eliminar_resena_admin(resena_id: str, admin_id: str = Query(...)):
         {"$set": {
             "estado": "eliminada_admin",
             "eliminada_por": admin_id,
-            "fecha_actualizacion": datetime.now(timezone.utc).isoformat()
+            "fecha_actualizacion": datetime.now(timezone.utc)
         }}
     )
     return {"mensaje": "Reseña eliminada por administrador"}
@@ -240,7 +240,10 @@ def destacar_resena(hotel_id: str, resena_id: str, admin_id: str = Query(...)):
     )
     resenas.update_one(
         {"_id": ObjectId(resena_id)},
-        {"$set": {"destacada": True, "fecha_actualizacion": datetime.now(timezone.utc).isoformat()}}
+        {"$set": {
+            "destacada": True,
+            "fecha_actualizacion": datetime.now(timezone.utc)
+        }}
     )
     return {"mensaje": "Reseña marcada como destacada"}
 
