@@ -21,16 +21,8 @@ db = client["Proyecto3"]
 
 resenas = db["reviews"]
 
-# ─────────────────────────────────────────────
-# HELPERS
-# ─────────────────────────────────────────────
 
-# ─────────────────────────────────────────────
 # RF1 – Crear reseña
-# POST /hoteles/{hotel_id}/resenas
-# Body: { cliente_id, reserva_id, calificacion, texto }
-# Reglas: reserva debe estar "completada" y no haber reseñado esa reserva antes
-# ─────────────────────────────────────────────
 
 @app.post("/hoteles/{hotel_id}/resenas")
 def crear_resena(hotel_id: str, datos: dict):
@@ -74,11 +66,7 @@ def crear_resena(hotel_id: str, datos: dict):
     return {"mensaje": "Reseña creada exitosamente", "id": str(resultado.inserted_id)}
 
 
-# ─────────────────────────────────────────────
 # RF2 – Editar reseña (cliente)
-# PUT /resenas/{resena_id}
-# Body: { cliente_id, calificacion, texto }
-# ─────────────────────────────────────────────
 
 @app.put("/resenas/{resena_id}")
 def editar_resena(resena_id: str, datos: dict):
@@ -105,7 +93,6 @@ def editar_resena(resena_id: str, datos: dict):
     return {"mensaje": "Reseña actualizada exitosamente"}
 
 
-# ─────────────────────────────────────────────
 # RF3 – Eliminar reseña (cliente)
 
 @app.delete("/resenas/{resena_id}")
