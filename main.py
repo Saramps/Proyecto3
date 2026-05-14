@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from pymongo import ASCENDING, DESCENDING
@@ -11,9 +12,22 @@ app = FastAPI(title="Dann-Alpes Reviews API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
+    expose_headers=["*"]
 )
+
+@app.options("/{rest_of_path:path}")
+async def preflight_handler(request: Request, rest_of_path: str) -> Response:
+    return Response(
+        content="OK",
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
 
 # Conexión a MongoDB (usar variable de entorno en Render)
 client = MongoClient(os.environ["MONGO_URI"])
