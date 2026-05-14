@@ -178,18 +178,16 @@ def historial_resenas(
 ):
     sort_field = "fecha_creacion" if orden == "fecha" else "id_hotel"
     docs = list(resenas.find(
-        {"cliente_id": cliente_id},
+        {"cedula_cliente": cliente_id},
         {
             "_id": 1, "id_hotel": 1, "nombre_hotel": 1, "calificacion": 1, "texto": 1,
             "estado": 1, "fecha_creacion": 1, "total_votos": 1,
-            "respuesta_admin": 1, "destacada": 1
+            "votos_utilidad": 1, "respuesta_admin": 1, "destacada": 1
         }
     ).sort(sort_field, DESCENDING))
-
     for d in docs:
         d["_id"] = str(d["_id"])
         d["tiene_respuesta"] = d.get("respuesta_admin") is not None
-
     return docs
 
 
