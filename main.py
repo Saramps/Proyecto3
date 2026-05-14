@@ -193,42 +193,28 @@ def historial_resenas(
 
 
 # RF7 – Responder reseña (administrador)
-
-
 @app.post("/responder/{resena_id}")
-def responder_resena(resena_id: str, datos: dict):
-    admin_id = datos.get("admin_id")
-    texto_respuesta = datos.get("texto_respuesta")
-
-    if not all([admin_id, texto_respuesta]):
-        raise HTTPException(status_code=400, detail="Se requieren admin_id y texto_respuesta")
-
+def responder_resena(resena_id: str, admin_id: str = Query(...), texto_respuesta: str = Query(...)):
     resena = resenas.find_one({"_id": ObjectId(resena_id), "estado": "publicada"})
     if not resena:
         raise HTTPException(status_code=404, detail="Reseña no encontrada")
-
     respuesta = {
         "admin_id": admin_id,
         "texto": texto_respuesta,
         "fecha": datetime.now(timezone.utc).isoformat()
     }
-
     resenas.update_one(
         {"_id": ObjectId(resena_id)},
         {"$set": {"respuesta_admin": respuesta, "fecha_actualizacion": datetime.now(timezone.utc).isoformat()}}
     )
     return {"mensaje": "Respuesta registrada exitosamente"}
 
-
 # RF8 – Eliminar reseña (administrador)
-
-
 @app.delete("/eliminar/{resena_id}")
 def eliminar_resena_admin(resena_id: str, admin_id: str = Query(...)):
     resena = resenas.find_one({"_id": ObjectId(resena_id)})
     if not resena:
         raise HTTPException(status_code=404, detail="Reseña no encontrada")
-
     resenas.update_one(
         {"_id": ObjectId(resena_id)},
         {"$set": {
@@ -239,31 +225,23 @@ def eliminar_resena_admin(resena_id: str, admin_id: str = Query(...)):
     )
     return {"mensaje": "Reseña eliminada por administrador"}
 
-
 # RF9 – Destacar reseña (administrador)
-
 @app.post("/destacar/{hotel_id}/{resena_id}")
-def destacar_resena(hotel_id: str, resena_id: str, datos: dict):
-    admin_id = datos.get("admin_id")
-    if not admin_id:
-        raise HTTPException(status_code=400, detail="Se requiere admin_id")
-
+def destacar_resena(hotel_id: str, resena_id: str, admin_id: str = Query(...)):
     resena = resenas.find_one({"_id": ObjectId(resena_id), "id_hotel": int(hotel_id), "estado": "publicada"})
     if not resena:
         raise HTTPException(status_code=404, detail="Reseña no encontrada en este hotel")
-
-    # Quitar destacada anterior del mismo hotel
     resenas.update_many(
         {"id_hotel": int(hotel_id), "destacada": True},
         {"$set": {"destacada": False}}
     )
-
-    # Marcar nueva destacada
     resenas.update_one(
         {"_id": ObjectId(resena_id)},
         {"$set": {"destacada": True, "fecha_actualizacion": datetime.now(timezone.utc).isoformat()}}
     )
     return {"mensaje": "Reseña marcada como destacada"}
+
+
 
 
 # RFC1 – Top 10 hoteles por calificación en un período
