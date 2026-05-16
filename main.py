@@ -39,7 +39,7 @@ def crear_resena(hotel_id: str, datos: dict):
         raise HTTPException(status_code=400, detail="La calificacion debe estar entre 1 y 5")
 
     # Verificar que no exista ya una reseña para esa reserva
-    existente = resenas.find_one({"codigo_confirmacion": reserva_id, "estado": "publicada"})
+    existente = resenas.find_one({"codigo_confirmacion": int(reserva_id), "estado": "publicada"})
     if existente:
         raise HTTPException(status_code=409, detail="Ya existe una reseña para esta reserva")
 
@@ -51,7 +51,7 @@ def crear_resena(hotel_id: str, datos: dict):
         "nombre_hotel": nombre_hotel,
         "ciudad_hotel": ciudad_hotel,
         "cedula_cliente": cliente_id,
-        "codigo_confirmacion": reserva_id,
+        "codigo_confirmacion": int(reserva_id),
         "calificacion": int(calificacion),
         "texto": texto,
         "fecha_creacion": datetime.now(timezone.utc),  # datetime real para $month/$year
