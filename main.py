@@ -31,6 +31,7 @@ def crear_resena(hotel_id: str, datos: dict):
     reserva_id = datos.get("reserva_id")
     calificacion = datos.get("calificacion")
     texto = datos.get("texto")
+    nombre_cliente = datos.get("nombre_cliente", "")
 
     if not all([cliente_id, reserva_id, calificacion, texto]):
         raise HTTPException(status_code=400, detail="Faltan campos obligatorios: cliente_id, reserva_id, calificacion, texto")
@@ -51,6 +52,7 @@ def crear_resena(hotel_id: str, datos: dict):
         "nombre_hotel": nombre_hotel,
         "ciudad_hotel": ciudad_hotel,
         "cedula_cliente": cliente_id,
+        "nombre_cliente": nombre_cliente,
         "codigo_confirmacion": int(reserva_id),
         "calificacion": int(calificacion),
         "texto": texto,
