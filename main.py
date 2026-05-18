@@ -84,7 +84,7 @@ def editar_resena(resena_id: str, datos: dict):
     if not resena:
         raise HTTPException(status_code=404, detail="Reseña no encontrada o no pertenece al cliente")
 
-    cambios = {"fecha_actualizacion": datetime.now(timezone.utc).isoformat()}
+    cambios = {"fecha_actualizacion": datetime.now(timezone.utc)}
     if calificacion is not None:
         if not (1 <= int(calificacion) <= 5):
             raise HTTPException(status_code=400, detail="La calificacion debe estar entre 1 y 5")
